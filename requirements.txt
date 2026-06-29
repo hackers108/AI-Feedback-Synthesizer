@@ -1,0 +1,16 @@
+pandas
+transformers
+torch
+sentence-transformers
+scikit-learn
+hdbscan
+bertopic
+google-generativeai
+python-dotenv
+langgraph
+langchain
+streamlit
+plotly
+umap-learn
+tabulate
+google-genai

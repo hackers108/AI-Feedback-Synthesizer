@@ -1,0 +1,85 @@
+topic,count,keywords,gemini_summary
+0,229,0_reels_reel_the_not,"Issue Name: Zero Reels Content Displayed for Affected Users
+Severity: High
+Business Impact: Reduced user engagement, decreased time on platform, and potential loss of ad revenue from Reels content for 229 users. Negative impact on user experience and satisfaction.
+Recommended Action: Immediately investigate system logs, error reports, and user-specific data for the 229 affected users to identify the root cause of Reels content display failure. Prioritize a fix and deploy an update to restore full functionality and monitor resolution."
+1,176,1_photos_pictures_post_upload,"Issue Name: Intermittent Photo Upload Failures Affecting Subset of Users
+Severity: High
+Business Impact: Significant disruption to user-generated content creation, leading to reduced user engagement, potential user churn, and increased customer support inquiries. Negatively impacts user experience and the overall value proposition of the platform if photo sharing is a core feature.
+Recommended Action: Immediately escalate to engineering to investigate the root cause of upload failures, analyzing server logs, API responses, and specific user reports. Prioritize and deploy a fix. Proactively communicate with affected users (if identifiable) and implement enhanced monitoring for photo upload functionality."
+2,160,2_log_account_login_password,"Issue Name: Persistent Account Login Failures
+Severity: High
+Business Impact: Directly prevents 160 users from accessing their accounts, leading to significant user frustration, increased customer support inquiries, and potential user churn. This can also result in lost revenue opportunities if users cannot complete critical actions within the platform.
+Recommended Action: Immediately investigate `2_log_account_login_password` entries to identify common patterns or error codes for the affected users. Diagnose the root cause, which may include issues with authentication services, database connectivity, recent code deployments, or rate limiting. Prioritize a hotfix and communicate proactively with affected users via support channels or a public status page update. Implement enhanced monitoring specifically for login flow success rates."
+3,97,3_reels_instagram_reel_option,"Issue Name: 3-Reel Instagram Option Malfunction
+Severity: Low
+Business Impact: Minor disruption to creative workflows and user experience for a small segment of content creators. Potential for slight, localized decrease in multi-reel content generation and associated engagement from these specific users.
+Recommended Action: Investigate the root cause of the 3-reels option malfunction, focusing on user device/OS, app version, and specific steps taken. Prioritize a fix in an upcoming sprint, monitoring for potential increases in affected user count."
+4,84,4_feed_refresh_couldnt_app,"Issue Name: Unable to Refresh App Feed (Error 4)
+Severity: Medium
+Business Impact: Minor degradation in user experience and engagement for a small segment of users (84 affected), potentially leading to decreased content consumption and user satisfaction.
+Recommended Action: Investigate logs for affected users to identify the root cause of 'Error 4' feed refresh failure. Escalate to the engineering team for diagnosis and a targeted fix. Monitor for an increase in affected users."
+5,81,5_reply_swipe_message_specific,"Issue Name: Swipe-to-Reply Gesture Failure on Specific Message Contexts
+Severity: Medium
+Business Impact: User frustration and potential reduced engagement for 81 affected users who are unable to utilize a key communication shortcut, possibly leading to delays in replies or abandonment of the gesture feature.
+Recommended Action: Investigate the root cause of the swipe-to-reply failure for the specific message contexts/types affecting these users, prioritize a fix for the next sprint, and provide clear communication to affected users about a temporary workaround if available."
+32,27,32_follow_followers_people_increasing,"Issue Name: Unnatural Follower/Following Growth Detected on 27 User Accounts
+Severity: Medium
+Business Impact:
+*   **Erodes User Trust:** Inauthentic activity undermines user confidence in the platform's integrity and value.
+*   **Skews Key Metrics:** Inflates follower/following counts, leading to inaccurate reporting and potentially flawed strategic decisions based on artificial growth.
+*   **Degrades User Experience:** Users may encounter spam, lower quality content in their feeds, or feel targeted by manipulative tactics.
+*   **Increased Risk of Abuse:** If unchecked, this pattern could escalate to larger-scale platform manipulation, potentially attracting negative press or regulatory scrutiny.
+Recommended Action:
+1.  **Forensic Analysis:** Conduct an in-depth investigation into the 27 affected accounts to understand the nature, source, and patterns of the unnatural growth (e.g., bot activity, mass following/unfollowing, use of third-party services).
+2.  **Mitigation & Enforcement:** Implement appropriate actions based on findings, such as removing identified bot accounts, sanctioning violating users (warnings, temporary suspensions, or permanent bans), and blocking known spam sources or manipulative services.
+3.  **Enhance Detection Systems:** Improve existing anomaly detection algorithms and machine learning models to proactively identify and prevent similar manipulative behaviors at scale, focusing on real-time detection.
+4.  **Policy Review:** Assess current platform policies related to follower acquisition and manipulation to ensure they are robust, clear, and effectively enforced against emerging tactics."
+33,26,33_video_videos_instagram_you,"Issue Name: Instagram Video Processing & Playback Failure (ID 33)
+Severity: Medium
+Business Impact: Reduced engagement and potential churn among 26 affected users; minor reputational risk; potential increase in customer support inquiries.
+Recommended Action: Immediately investigate the specific root cause for the 26 affected users by gathering detailed logs and user reports. Prioritize a fix to restore full video functionality and consider proactive communication with the impacted cohort."
+34,25,34_messages_chats_message_chat,"Issue Name: Chat Functionality Impairment for Specific Users
+Severity: High
+Business Impact: Significant decrease in user satisfaction and engagement for affected individuals, potentially leading to churn, negative reviews, and a damaged platform reputation. Direct communication capabilities are disrupted, impacting user workflows and potentially transactions.
+Recommended Action: Immediately investigate chat logs, server-side errors, and network performance specific to the 25 affected users to diagnose the root cause. Prioritize the development and deployment of a hotfix. Communicate proactively with affected users about the issue and resolution progress. Implement enhanced monitoring for chat functionality."
+35,24,35_dark_mode_light_theme,"Issue Name: Inconsistent Dark/Light Theme Display for 24 Users
+Severity: Medium
+Business Impact: Decreased user satisfaction and potential for churn among the affected 24 users due to a suboptimal visual experience. May also reflect negatively on product quality perception.
+Recommended Action: Investigate and diagnose the root cause of the inconsistent theme display. Prioritize a fix to ensure all users can reliably utilize their preferred dark or light mode settings."
+36,24,36_instagram_ive_accunt_working,"Issue Name: Disrupted Functionality for 36 Instagram Accounts Affecting 24 Users
+Severity: High
+Business Impact: Significant user frustration and potential churn due due to inability to access or utilize core Instagram account functionality. Risk of reputational damage, increased support inquiries, and potential loss of engagement/revenue if affected accounts are critical for user operations.
+Recommended Action: Immediately investigate the root cause of the operational failure for the 36 Instagram accounts. Prioritize resolution to restore full functionality for all 24 affected users. Proactively communicate with affected users, offering apologies and status updates. Implement long-term fixes to prevent recurrence and review monitoring systems to detect similar issues promptly."
+37,23,37_messages_chat_send_when,"Issue Name: Chat Send Functionality Failure Triggered at 37 Messages
+Severity: High
+Business Impact: Significant user frustration and potential disengagement for affected users, impacting core product usability and potentially leading to support inquiries.
+Recommended Action: Immediately investigate the affected user accounts and chat logs to reproduce and diagnose the root cause of the 37-message trigger. Prioritize the development and deployment of a hotfix to restore full chat functionality for all users."
+43,18,43_ig_why_now_it,"Issue Name: User Confusion/Dissatisfaction with Recent Instagram Change (ID 43)
+Severity: Low
+Business Impact: Minimal immediate business impact due to a very low number of affected users (18). Primarily concerns minor user dissatisfaction and potential for negative sentiment if the underlying cause is not addressed or if more users encounter the same issue.
+Recommended Action: Investigate the specific 'it' referred to in the user feedback. Gather more context from the 18 affected users to identify the exact feature, change, or bug causing the confusion/dissatisfaction. Monitor for any increase in similar reports to determine if it's an isolated incident or an early indicator of a broader trend."
+44,18,44_blank_screen_white_black,"Issue Name: White/Black/Blank Screen Display Issue
+Severity: High
+Business Impact: Significant loss of productivity for 18 affected users, leading to high user frustration and potential churn. Increased support burden and negative impact on product reputation.
+Recommended Action: Immediately investigate the root cause with engineering, focusing on system logs and configurations of affected users (keyword '44' might be relevant). Prioritize a hotfix or patch release. Proactively communicate with affected users, acknowledge the issue, and provide any temporary workarounds or status updates."
+45,16,45_hacked_account_security_password,"Issue Name: Compromised User Accounts
+Severity: Medium
+Business Impact: Potential loss of user trust and retention for affected users, increased customer support burden, and minor reputational damage. Risk of data exposure for the 16 affected accounts.
+Recommended Action: Immediately force password resets for all 16 affected accounts and notify users with security best practice guidance. Initiate a forensic investigation to determine the root cause of the compromise (e.g., phishing, credential stuffing, system vulnerability). Implement stronger password policies and enhance Multi-Factor Authentication (MFA) promotion/enforcement across the platform. Review and improve security monitoring for suspicious login patterns."
+46,16,46_blocked_action_block_instagram,"Issue Name: Instagram Action Blocks Affecting a Small User Segment
+Severity: Low
+Business Impact: Minor user dissatisfaction for the 16 affected accounts, potentially leading to a small number of support inquiries and negligible impact on overall platform engagement or revenue.
+Recommended Action: Investigate the specific root causes for the 16 action blocks to identify patterns. Provide targeted support to affected users to resolve their blocks. Monitor for any increase in affected users to prevent escalation."
+47,16,47_stars_star_giving_app,"Issue Name: Star Giving Transaction Failure (Quantity: 47)
+Severity: Medium
+Business Impact: User frustration and potential loss of engagement due to inability to perform a core app function for affected users. Risk of data inaccuracy if stars are tracked for recognition or rewards, leading to skewed metrics and potential fairness concerns.
+Recommended Action:
+1.  **Investigate Root Cause:** Immediately analyze system logs and transaction data to pinpoint why star giving fails specifically for the quantity of 47.
+2.  **Develop & Deploy Fix:** Prioritize the development and release of a patch to resolve the underlying bug in the star-giving mechanism.
+3.  **Data Reconciliation:** Review affected user accounts and, if possible, manually reconcile or reprocess any lost or failed 47-star transactions to ensure data integrity and user satisfaction.
+4.  **Regression Testing:** Conduct thorough testing to ensure the fix doesn't introduce new issues and that all star-giving functionalities work as expected across various quantities."
+48,16,48_blocked_follow_action_done,"Issue Name: Users Experiencing Blocked Follow Actions (Error 48)
+Severity: Medium
+Business Impact: Potential for user frustration and decreased engagement for the 16 affected users, hindering their ability to connect and build networks within the platform.
+Recommended Action: Investigate the root cause of Error 48 by analyzing system logs and user activity data for the 16 affected users. Develop and deploy a fix to unblock follow functionality and restore normal user experience."
