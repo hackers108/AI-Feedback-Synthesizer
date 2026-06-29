@@ -1,35 +1,35 @@
+# ==========================
 # Python
+# ==========================
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
 
 # Virtual Environment
 venv/
 .venv/
 env/
 
-# IDE
+# Environment Variables
+.env
+
+# VS Code
 .vscode/
+
+# JetBrains
 .idea/
 
 # Streamlit
 .streamlit/secrets.toml
 
-# OS Files
+# OS
 .DS_Store
 Thumbs.db
-
-# Python Cache
-.pytest_cache/
-.mypy_cache/
 
 # Logs
 *.log
 
-# Environment
-.env
-
-# Notebook checkpoints
+# Jupyter
 .ipynb_checkpoints/
 
 # Build
@@ -37,7 +37,16 @@ build/
 dist/
 *.egg-info/
 
-# Ignore generated outputs (optional)
-# Uncomment these if you don't want generated files in Git
-# data/*.csv
-# data/*.md
+# Uploads
+uploads/
+dashboard/uploads/
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+
+# ChromaDB
+chroma_db/
+
+# Model Cache
+.cache/
