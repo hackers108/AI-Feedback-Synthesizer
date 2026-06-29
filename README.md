@@ -108,25 +108,29 @@ AI-Feedback-Synthesizer/
 
 ### Overview
 
-![Overview](assets/overview.png)
+![Overview]<img width="1918" height="911" alt="image" src="https://github.com/user-attachments/assets/97a45e9c-eb3e-484a-b26a-3be2fd63d35b" />
+
 
 ---
 
 ### Sentiment Analysis
 
-![Sentiment](assets/sentiment.png)
+![Sentiment]<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/de728472-a5b8-4e74-b7e0-086954d6dbbf" />
+
 
 ---
 
 ### Topic Modeling
 
-![Topics](assets/topics.png)
+![Topics]<img width="1919" height="918" alt="image" src="https://github.com/user-attachments/assets/9df77ea3-35d1-4823-a119-60574ccbccf2" />
+
 
 ---
 
 ### Trend Analysis
 
-![Trends](assets/trends.png)
+![Trends]<img width="1919" height="902" alt="image" src="https://github.com/user-attachments/assets/94afeb68-bd30-471f-9ef9-c8b99cbf514f" />
+
 
 ---
 
