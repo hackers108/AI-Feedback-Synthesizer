@@ -1,17 +1,54 @@
 import json
 import os
 
-from google import genai
-from dotenv import load_dotenv
+
+def load_environment():
+
+    try:
+
+        from dotenv import load_dotenv
+
+        load_dotenv()
+
+    except Exception:
+
+        pass
 
 
-load_dotenv()
+def get_gemini_client():
 
-client = genai.Client(
-    api_key=os.getenv(
-        "GEMINI_API_KEY"
+    from google import genai
+
+    load_environment()
+
+    return genai.Client(
+        api_key=os.getenv(
+            "GEMINI_API_KEY"
+        )
     )
-)
+
+
+def evaluate_report_locally(report):
+
+    required_sections = {
+        "sentiment": "Missing sentiment analysis",
+        "complaint": "Missing customer complaints",
+        "trend": "Missing trend analysis",
+        "recommend": "Missing recommendations"
+    }
+
+    report_lower = report.lower()
+
+    issues = [
+        issue
+        for keyword, issue in required_sections.items()
+        if keyword not in report_lower
+    ]
+
+    return {
+        "status": "FAIL" if issues else "PASS",
+        "issues": issues
+    }
 
 
 def evaluate_report(report):
@@ -54,6 +91,8 @@ Report:
 
     try:
 
+        client = get_gemini_client()
+
         response = (
             client.models.generate_content(
                 model="gemini-2.5-flash",
@@ -92,6 +131,7 @@ Report:
         )
 
         return {
-            "status": "PASS",
-            "issues": []
+            **evaluate_report_locally(
+                report
+            )
         }

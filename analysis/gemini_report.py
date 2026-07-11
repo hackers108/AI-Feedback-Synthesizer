@@ -1,7 +1,3 @@
-from google import genai
-
-from dotenv import load_dotenv
-
 import os
 
 from analysis.local_report import (
@@ -9,13 +5,30 @@ from analysis.local_report import (
 )
 
 
-load_dotenv()
+def load_environment():
 
-client = genai.Client(
-    api_key=os.getenv(
-        "GEMINI_API_KEY"
+    try:
+
+        from dotenv import load_dotenv
+
+        load_dotenv()
+
+    except Exception:
+
+        pass
+
+
+def get_gemini_client():
+
+    from google import genai
+
+    load_environment()
+
+    return genai.Client(
+        api_key=os.getenv(
+            "GEMINI_API_KEY"
+        )
     )
-)
 
 
 def generate_business_report(
@@ -65,6 +78,8 @@ Keep the report concise and business friendly.
 """
 
     try:
+
+        client = get_gemini_client()
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",

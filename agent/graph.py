@@ -4,40 +4,16 @@ from langgraph.graph import (
     END
 )
 
-from agent.router import (
-    route_from_supervisor
-)
-
-from agent.state import (
-    FeedbackState
-)
-
-from agent.supervisor import (
-    supervisor_agent
-)
-
-from agent.sentiment_agent import (
-    sentiment_agent
-)
-
-from agent.topic_agent import (
-    topic_agent
-)
-
-from agent.memory_agent import (
-    memory_agent
-)
-
-from agent.trend_agent import (
+from agent.agents import (
+    FeedbackState,
+    critic_agent,
+    memory_agent,
+    report_agent,
+    route_next_agent,
+    sentiment_agent,
+    supervisor_agent,
+    topic_agent,
     trend_agent
-)
-
-from agent.report_agent import (
-    report_agent
-)
-
-from agent.critic_agent import (
-    critic_agent
 )
 
 builder = StateGraph(
@@ -92,55 +68,30 @@ builder.add_edge(
     "supervisor"
 )
 
-# -------------------------
-# Supervisor Routing
-# -------------------------
+route_map = {
+    "sentiment": "sentiment",
+    "topic": "topic",
+    "memory": "memory",
+    "trend": "trend",
+    "report": "report",
+    "critic": "critic",
+    "end": END
+}
 
-builder.add_conditional_edges(
+for node_name in [
     "supervisor",
-    route_from_supervisor,
-    {
-        "sentiment": "sentiment",
-        "topic": "topic",
-        "memory": "memory",
-        "trend": "trend",
-        "report": "report"
-    }
-)
-
-# -------------------------
-# Fixed Flow
-# -------------------------
-
-builder.add_edge(
     "sentiment",
-    "topic"
-)
-
-builder.add_edge(
     "topic",
-    "memory"
-)
-
-builder.add_edge(
     "memory",
-    "trend"
-)
-
-builder.add_edge(
     "trend",
-    "report"
-)
-
-builder.add_edge(
     "report",
     "critic"
-)
-
-builder.add_edge(
-    "critic",
-    END
-)
+]:
+    builder.add_conditional_edges(
+        node_name,
+        route_next_agent,
+        route_map
+    )
 
 graph = builder.compile()
 

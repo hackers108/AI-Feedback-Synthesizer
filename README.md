@@ -1,267 +1,91 @@
+---
+title: AI Feedback Synthesizer
+colorFrom: blue
+colorTo: green
+sdk: streamlit
+sdk_version: 1.36.0
+app_file: app.py
+pinned: false
+---
+
 # AI Feedback Synthesizer
 
-An AI-powered Customer Feedback Intelligence Platform for automated sentiment analysis, topic discovery, trend detection, and executive reporting.
+An agentic customer feedback analysis app built with Python, Streamlit, LangGraph, RoBERTa, BERTopic, Gemini, and Pandas.
 
----
+## What It Does
 
-## Overview
+The app lets a user upload one customer feedback CSV and then ask multiple questions on the same file, such as:
 
-AI Feedback Synthesizer is an end-to-end customer feedback analytics platform that transforms unstructured customer reviews into actionable business insights.
+- What is the overall customer sentiment?
+- What are the top complaint themes?
+- What complaint trends are rising?
+- Generate an executive report with recommendations.
 
-The platform combines transformer-based sentiment analysis, unsupervised topic modeling, trend detection, and large language models to help organizations understand customer feedback at scale.
+## Simple Architecture
 
-The project is designed for Product Teams, Customer Success Teams, Business Analysts, and Data Scientists who require a scalable solution for analyzing customer feedback from multiple sources.
-
----
-
-## Key Features
-
-### Sentiment Analysis
-
-* Transformer-based sentiment classification using RoBERTa
-* Positive, Neutral, and Negative classification
-* Batch inference for large datasets
-
-### Topic Modeling
-
-* BERTopic-based topic discovery
-* Automatic complaint clustering
-* Representative review extraction
-* Business-friendly topic labeling
-
-### Trend Analysis
-
-* Historical topic tracking
-* Complaint growth detection
-* Emerging issue identification
-
-### Executive Reporting
-
-* Gemini-powered executive summaries
-* Local fallback reporting
-* Business recommendations
-* Key insight generation
-
-### Interactive Dashboard
-
-* Dataset upload
-* Review search
-* KPI dashboard
-* Interactive visualizations
-* Topic exploration
-* CSV export
-
----
-
-## System Architecture
-
-```
-Customer Feedback
-        │
-        ▼
-Schema Normalization
-        │
-        ▼
-RoBERTa Sentiment Analysis
-        │
-        ▼
-BERTopic Topic Modeling
-        │
-        ▼
-Trend Detection
-        │
-        ▼
-Gemini Executive Summary
-        │
-        ▼
-Interactive Streamlit Dashboard
+```text
+frontend/streamlit_app.py
+        |
+        v
+agent/graph.py
+        |
+        v
+agent/agents.py
+        |
+        +--> analysis/sentiment.py       RoBERTa sentiment analysis
+        +--> analysis/topic_modeling.py  BERTopic complaint clustering
+        +--> memory/memory_manager.py    CSV-based run history
+        +--> tools/trend_detector.py     Trend comparison
+        +--> analysis/gemini_report.py   Gemini business report
+        +--> analysis/gemini_critic.py   Report quality check
 ```
 
----
+## Main Flow
 
-## Project Structure
-
-```
-AI-Feedback-Synthesizer/
-
-├── agent/
-├── analysis/
-├── backend/
-├── dashboard/
-├── ingestion/
-├── memory/
-├── normalization/
-├── tools/
-├── utils/
-
-├── data/
-├── uploads/
-
-├── requirements.txt
-├── README.md
-└── LICENSE
+```text
+CSV Upload
+ -> Schema normalization
+ -> Sentiment Agent
+ -> Topic Agent
+ -> Memory Agent
+ -> Trend Agent
+ -> Report Agent
+ -> Critic Agent
+ -> Streamlit Results
 ```
 
----
+The supervisor does not always run every agent. It reads the user question, chooses the minimum required agents, expands dependencies, and LangGraph routes through the needed steps.
 
-## Dashboard
+## Important Files
 
-### Overview
+- `frontend/streamlit_app.py`: Streamlit UI, file upload, suggested prompts, progress bar, result display.
+- `agent/graph.py`: LangGraph wiring.
+- `agent/agents.py`: Supervisor, routing, and all agent node functions.
+- `analysis/sentiment.py`: RoBERTa sentiment classification.
+- `analysis/topic_modeling.py`: BERTopic clustering on negative reviews.
+- `memory/memory_manager.py`: Saves previous runs.
+- `tools/trend_detector.py`: Compares topic counts across runs.
+- `analysis/gemini_report.py`: Generates business report.
+- `analysis/gemini_critic.py`: Checks report quality.
 
-![Overview]<img width="1918" height="911" alt="image" src="https://github.com/user-attachments/assets/97a45e9c-eb3e-484a-b26a-3be2fd63d35b" />
+## Run
 
-
----
-
-### Sentiment Analysis
-
-![Sentiment]<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/de728472-a5b8-4e74-b7e0-086954d6dbbf" />
-
-
----
-
-### Topic Modeling
-
-![Topics]<img width="1919" height="918" alt="image" src="https://github.com/user-attachments/assets/9df77ea3-35d1-4823-a119-60574ccbccf2" />
-
-
----
-
-### Trend Analysis
-
-![Trends]<img width="1919" height="902" alt="image" src="https://github.com/user-attachments/assets/94afeb68-bd30-471f-9ef9-c8b99cbf514f" />
-
-
----
-
-## Technology Stack
-
-### Programming Language
-
-* Python
-
-### Machine Learning
-
-* Transformers
-* Hugging Face
-* BERTopic
-* Sentence Transformers
-* Scikit-learn
-
-### Large Language Model
-
-* Google Gemini
-
-### Dashboard
-
-* Streamlit
-* Plotly
-
-### Data Processing
-
-* Pandas
-* NumPy
-
----
-
-## Installation
-
-Clone the repository
-
-```bash
-git clone https://github.com/hackers108/AI-Feedback-Synthesizer.git
-
-cd AI-Feedback-Synthesizer
-```
-
-Create a virtual environment
-
-```bash
-python -m venv venv
-```
-
-Activate the environment
-
-Windows
-
-```bash
+```powershell
+cd C:\Users\arpit\feedback-synthesizer
 venv\Scripts\activate
+streamlit run frontend\streamlit_app.py
 ```
 
-Linux/macOS
+## Environment
 
-```bash
-source venv/bin/activate
+Create a `.env` file with:
+
+```text
+GEMINI_API_KEY=your_api_key_here
 ```
 
-Install dependencies
+If Gemini fails, report generation uses the local fallback in `analysis/local_report.py`.
 
-```bash
-pip install -r requirements.txt
-```
+## Interview Pitch
 
----
-
-## Running the Application
-
-Launch the Streamlit dashboard
-
-```bash
-streamlit run dashboard/app.py
-```
-
-The application will be available at
-
-```
-http://localhost:8501
-```
-
----
-
-## Sample Workflow
-
-1. Upload a customer feedback dataset
-2. Execute the analysis pipeline
-3. Perform sentiment classification
-4. Discover complaint topics
-5. Analyze emerging trends
-6. Generate executive insights
-7. Explore results through the dashboard
-8. Export reports
-
----
-
-## Future Improvements
-
-* Multi-file processing
-* Authentication and user management
-* REST API
-* Docker deployment
-* Cloud deployment
-* PDF report generation
-* Scheduled analysis
-* Real-time monitoring
-
----
-
-## Author
-
-**Arpit Yadav**
-
-B.Tech, Electrical Engineering
-Madan Mohan Malaviya University of Technology
-
-GitHub
-https://github.com/hackers108
-
-LinkedIn
-https://linkedin.com/in/arpityadav-cpp
-
-Email
-[arpit799yadav@gmail.com](mailto:arpit799yadav@gmail.com)
-
----
-
-## License
-
-This project is distributed under the MIT License.
+"I built an agentic AI feedback analysis platform. Users upload a CSV of customer reviews and ask natural-language questions. A LangGraph supervisor decides which agents are needed. The Sentiment Agent uses RoBERTa, the Topic Agent uses BERTopic, the Memory Agent stores historical runs, the Trend Agent compares changes over time, and Gemini generates an executive report. The system is modular, so each agent has one responsibility."
