@@ -14,7 +14,7 @@ Agents:
 - Sentiment Agent: classifies reviews as positive, neutral, or negative.
 - Topic Agent: clusters negative reviews into complaint themes.
 - Report Agent: generates a business report.
-- Critic Agent: checks whether the report has required sections.
+- Critic Agent: checks report quality internally without displaying its review in the frontend.
 
 ## 3. File Architecture To Explain
 

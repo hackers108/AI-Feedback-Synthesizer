@@ -35,7 +35,9 @@ def generate_business_report(
 
     sentiment_summary,
 
-    topic_summary
+    topic_summary,
+
+    user_question="Generate a complete business report."
 
 ):
 
@@ -43,6 +45,9 @@ def generate_business_report(
 You are a Senior Customer Experience Analyst.
 
 Create a professional business report.
+
+User Question:
+{user_question}
 
 Use the following data.
 
@@ -52,7 +57,7 @@ Sentiment Summary:
 Topic Summary:
 {topic_summary}
 
-Generate:
+If the user requested a complete report, generate:
 
 1. Executive Summary
 
@@ -62,7 +67,10 @@ Generate:
 
 4. Business Recommendations
 
-Keep the report concise and business friendly.
+Otherwise, answer the user's exact question directly and include only the
+sections needed for that answer. Do not force a full report for a focused
+question. Never include a report quality review, score, critique, or evaluation.
+Keep the response concise and business friendly.
 Use only the supplied current-upload data. Do not discuss historical trends,
 previous runs, changes over time, or future trend monitoring.
 """

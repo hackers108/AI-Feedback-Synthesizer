@@ -92,7 +92,7 @@ if __name__ == "__main__":
     result = graph.invoke(
         {
             "input_file":
-            "data/instagram.csv",
+            "uploads/input.csv",
 
             "query":
             query
@@ -115,24 +115,5 @@ if __name__ == "__main__":
         result.get(
             "report",
             "No report generated"
-        )
-    )
-
-    print(
-        "\n================="
-    )
-
-    print(
-        "CRITIC RESULT"
-    )
-
-    print(
-        "=================\n"
-    )
-
-    print(
-        result.get(
-            "critic",
-            {}
         )
     )

@@ -1,4 +1,3 @@
-import shutil #Copies uploaded CSV to uploads folder.
 import sys
 import time
 from pathlib import Path #file handling
@@ -40,9 +39,11 @@ def initialize_session():
     defaults = {
         "active_file_path": None,
         "active_file_name": None,
+        "active_file_id": None,
         "sentiment_file": None,
         "topic_file": None,
-        "last_result": None
+        "last_result": None,
+        "analysis_batch_size": 500
     }
 
     for key, value in defaults.items():
@@ -120,14 +121,6 @@ def render_outputs(result):
             f"Run completed, but there are no dashboard files to display yet: {error}"
         )
 
-        with st.expander(
-            "Agent Result"
-        ):
-
-            st.json(
-                result
-            )
-
         return
 
     if show_sentiment and sentiment_df is not None:
@@ -188,37 +181,40 @@ def render_outputs(result):
             "Topic Result"
         )
 
-        st.dataframe(
-            topic_df[
-                [
-                    "Topic",
-                    "Count",
-                    "Name"
-                ]
-            ]
+        # Show readable topic labels instead of the
+        # raw BERTopic Name value with underscores.
+        topic_display_columns = [
+            "Business_Label",
+            "Count"
+        ]
+
+        if "Topic_Description" in topic_df.columns:
+            topic_display_columns.insert(
+                1,
+                "Topic_Description"
+            )
+
+        topic_display = (
+            topic_df[topic_display_columns]
             .sort_values(
                 by="Count",
                 ascending=False
             )
-            .head(10),
-            use_container_width=True
-        )
-
-        topic_chart_df = (
-            topic_df[
-                [
-                    "Name",
-                    "Count"
-                ]
-            ]
             .head(10)
-            .set_index(
-                "Name"
+            .rename(
+                columns={
+                    "Business_Label": "Topic",
+                    "Topic_Description": "What Customers Report",
+                    "Count": "Reviews"
+                }
             )
         )
 
-        st.bar_chart(
-            topic_chart_df
+        # The topic graph was removed because long
+        # labels were difficult to read on the axis.
+        st.dataframe(
+            topic_display,
+            use_container_width=True
         )
 
         st.divider()
@@ -243,15 +239,6 @@ def render_outputs(result):
         )
 
         st.divider()
-
-    with st.expander(
-        "Agent Result"
-    ):
-
-        st.json(
-            result
-        )
-
 
 initialize_session()
 
@@ -343,6 +330,15 @@ SUGGESTED_PROMPTS = [
 ]
 
 
+BATCH_SIZE_OPTIONS = {
+    "100 reviews": 100,
+    "250 reviews": 250,
+    "500 reviews": 500,
+    "1,000 reviews": 1000,
+    "All reviews": None
+}
+
+
 # --------------------------------------------------
 # Upload Section
 # --------------------------------------------------
@@ -354,30 +350,50 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file:
 
-    save_path = "uploads/input.csv"
-    Path("uploads").mkdir(
+    save_path = ROOT_DIR / "uploads" / "input.csv"
+    save_path.parent.mkdir(
         exist_ok=True
     )
 
+    uploaded_file_id = getattr(
+        uploaded_file,
+        "file_id",
+        f"{uploaded_file.name}:{uploaded_file.size}"
+    )
+
+    # Streamlit reruns the page after every question.
+    # Save only a genuinely new upload so the active
+    # CSV is not overwritten while it is being used.
     if (
-        st.session_state.active_file_name
-        != uploaded_file.name
+        st.session_state.active_file_id
+        != uploaded_file_id
+        or not save_path.exists()
     ):
 
         reset_analysis_cache()
 
-    with open(
-        save_path,
-        "wb"
-    ) as file:
+        uploaded_file.seek(0)
 
-        shutil.copyfileobj(
-            uploaded_file,
-            file
+        with open(
+            save_path,
+            "wb"
+        ) as file:
+
+            file.write(
+                uploaded_file.getbuffer()
+            )
+
+        st.session_state.active_file_path = str(
+            save_path
         )
 
-    st.session_state.active_file_path = save_path
-    st.session_state.active_file_name = uploaded_file.name
+        st.session_state.active_file_name = (
+            uploaded_file.name
+        )
+
+        st.session_state.active_file_id = (
+            uploaded_file_id
+        )
 
 
 if st.session_state.active_file_path:
@@ -392,9 +408,34 @@ if st.session_state.active_file_path:
         unsafe_allow_html=True
     )
 
-    task_col, ask_col = st.columns(
-        [1, 1.4]
+    batch_col, task_col, ask_col = st.columns(
+        [0.7, 1, 1.4]
     )
+
+    with batch_col:
+
+        selected_batch_label = st.selectbox(
+            "Analysis batch size",
+            list(BATCH_SIZE_OPTIONS.keys()),
+            index=2
+        )
+
+        selected_batch_size = BATCH_SIZE_OPTIONS[
+            selected_batch_label
+        ]
+
+        # A different batch size needs fresh sentiment
+        # and topic results, so cached files are reset.
+        if (
+            st.session_state.analysis_batch_size
+            != selected_batch_size
+        ):
+
+            reset_analysis_cache()
+
+            st.session_state.analysis_batch_size = (
+                selected_batch_size
+            )
 
     with task_col:
 
@@ -406,8 +447,11 @@ if st.session_state.active_file_path:
     with ask_col:
 
         custom_query = st.text_input(
-            "Ask the AI workflow what to do",
-            placeholder="Example: Find the top complaint themes and generate recommendations."
+            "Ask any question about the uploaded feedback",
+            placeholder=(
+                "Example: Why are customers dissatisfied, "
+                "and what should we prioritize?"
+            )
         )
 
     query = custom_query.strip() or selected_prompt
@@ -465,6 +509,9 @@ if st.session_state.active_file_path:
             graph_input = {
                 "input_file":
                 st.session_state.active_file_path,
+
+                "batch_size":
+                selected_batch_size,
 
                 "query":
                 query,

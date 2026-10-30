@@ -34,7 +34,7 @@ agent/agents.py
         +--> analysis/sentiment.py       RoBERTa sentiment analysis
         +--> analysis/topic_modeling.py  BERTopic complaint clustering
         +--> analysis/gemini_report.py   Gemini business report
-        +--> analysis/gemini_critic.py   Report quality check
+        +--> analysis/gemini_critic.py   Internal report quality check
 ```
 
 ## Main Flow
@@ -45,7 +45,7 @@ CSV Upload
  -> Sentiment Agent
  -> Topic Agent
  -> Report Agent
- -> Critic Agent
+ -> Critic Agent (internal only)
  -> Streamlit Results
 ```
 
@@ -59,7 +59,7 @@ The supervisor does not always run every agent. It reads the user question, choo
 - `analysis/sentiment.py`: RoBERTa sentiment classification.
 - `analysis/topic_modeling.py`: BERTopic clustering on negative reviews.
 - `analysis/gemini_report.py`: Generates business report.
-- `analysis/gemini_critic.py`: Checks report quality.
+- `analysis/gemini_critic.py`: Internally checks report quality; not displayed in the UI.
 
 ## Run
 
@@ -81,4 +81,4 @@ If Gemini fails, report generation uses the local fallback in `analysis/local_re
 
 ## Interview Pitch
 
-"I built an agentic AI feedback analysis platform. Users upload a CSV of customer reviews and ask natural-language questions. A LangGraph supervisor decides which agents are needed. The Sentiment Agent uses RoBERTa, the Topic Agent uses BERTopic, Gemini generates an executive report from the current upload, and the Critic Agent checks report quality. The system is modular, so each agent has one responsibility."
+"I built an agentic AI feedback analysis platform. Users upload a CSV of customer reviews and ask natural-language questions. A hybrid Gemini and keyword supervisor decides which agents are needed. The Sentiment Agent uses RoBERTa, the Topic Agent uses BERTopic, Gemini generates a tailored answer from the current upload, and an internal Critic Agent checks report quality without exposing debug output in the UI."

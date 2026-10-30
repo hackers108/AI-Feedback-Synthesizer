@@ -4,11 +4,26 @@ import pandas as pd
 from normalization.schema_mapper import normalize_schema
 
 
-def run_sentiment(input_file):
+def run_sentiment(
+    input_file,
+    sample_size=500,
+    progress_callback=None
+):
+
+    def update(progress, message):
+
+        if progress_callback:
+
+            progress_callback(
+                progress,
+                message
+            )
 
     # ----------------------------------
     # Load Input File
     # ----------------------------------
+
+    update(0.0, "Loading uploaded feedback...")
 
     df = pd.read_csv(input_file)
 
@@ -19,6 +34,8 @@ def run_sentiment(input_file):
     # Normalize Schema
     # ----------------------------------
 
+    update(0.10, "Normalizing CSV columns...")
+
     df = normalize_schema(df)
 
     print("\nColumns After Mapping:")
@@ -28,11 +45,14 @@ def run_sentiment(input_file):
     # Sampling
     # ----------------------------------
 
-    SAMPLE_SIZE = 500
+    # sample_size=None means analyze every review.
+    if (
+        sample_size is not None
+        and len(df) > sample_size
+    ):
 
-    if len(df) > SAMPLE_SIZE:
         df = df.sample(
-            SAMPLE_SIZE,
+            sample_size,
             random_state=42
         )
 
@@ -42,12 +62,16 @@ def run_sentiment(input_file):
     # Load Sentiment Model
     # ----------------------------------
 
+    update(0.20, "Loading RoBERTa sentiment model...")
+
     classifier = pipeline(
         "sentiment-analysis",
         model="cardiffnlp/twitter-roberta-base-sentiment-latest"
     )
 
     print("\nSentiment Model Loaded!")
+
+    update(0.35, "RoBERTa model loaded")
 
     sentiments = []
 
@@ -77,9 +101,25 @@ def run_sentiment(input_file):
             f"Processed {min(i + batch_size, len(df))}/{len(df)} reviews"
         )
 
+        processed_reviews = min(
+            i + batch_size,
+            len(df)
+        )
+
+        update(
+            0.35 + (
+                0.60
+                * processed_reviews
+                / max(len(df), 1)
+            ),
+            f"Analyzed {processed_reviews}/{len(df)} reviews"
+        )
+
     # ----------------------------------
     # Save Results
     # ----------------------------------
+
+    update(0.98, "Saving sentiment results...")
 
     df["sentiment"] = sentiments
 
@@ -94,6 +134,8 @@ def run_sentiment(input_file):
     )
 
     print("\nSentiment Analysis Completed!")
+
+    update(1.0, "Sentiment analysis completed")
 
     return OUTPUT_FILE
 
