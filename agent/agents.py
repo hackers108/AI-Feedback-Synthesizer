@@ -1,20 +1,18 @@
-import os
+import os #for file operations
 from typing import NotRequired, TypedDict
 
 import pandas as pd
 
 
-class FeedbackState(TypedDict):
-    input_file: str
-    query: NotRequired[str]
-    required_agents: NotRequired[list[str]]
+class FeedbackState(TypedDict):#Typedict has predefined keys and their types, which helps in maintaining a consistent structure for the state dictionary used across different agents.
+    input_file: str #it stores a file path.
+    query: NotRequired[str] #user asked question
+    required_agents: NotRequired[list[str]]#notrequired means key may or may not be present in the dictionary
     completed_agents: NotRequired[list[str]]
     sentiment_file: NotRequired[str]
     sentiment_result: NotRequired[dict]
     topic_file: NotRequired[str]
     topic_result: NotRequired[object]
-    memory_result: NotRequired[dict]
-    trend_result: NotRequired[object]
     report: NotRequired[str]
     critic: NotRequired[dict]
     unsupported_query: NotRequired[bool]
@@ -24,17 +22,13 @@ class FeedbackState(TypedDict):
 AGENT_ORDER = [
     "sentiment",
     "topic",
-    "memory",
-    "trend",
     "report",
     "critic"
 ]
 
 AGENT_DEPENDENCIES = {
     "topic": ["sentiment"],
-    "memory": ["sentiment", "topic"],
-    "trend": ["sentiment", "topic", "memory"],
-    "report": ["sentiment", "topic", "memory", "trend"],
+    "report": ["sentiment", "topic"],
     "critic": ["report"]
 }
 
@@ -47,10 +41,6 @@ SUPPORTED_KEYWORDS = [
     "topic",
     "theme",
     "issue",
-    "trend",
-    "memory",
-    "history",
-    "compare",
     "report",
     "summary",
     "recommendation",
@@ -60,7 +50,7 @@ SUPPORTED_KEYWORDS = [
 
 UNSUPPORTED_MESSAGE = (
     "I can only help with customer feedback analysis. "
-    "Ask for sentiment, complaint topics, trends, comparison, or a report."
+    "Ask for sentiment, complaint topics, or a report based on the uploaded file."
 )
 
 
@@ -82,11 +72,13 @@ def mark_completed(state, agent_name):
 
 
 def is_supported_query(query):
+    #extracting keyword from query and checking if it is present in the list of supported keywords
     query = query.lower()
     return any(keyword in query for keyword in SUPPORTED_KEYWORDS)
 
 
 def choose_agents(query):
+    #choosing agents based on the keywords
     query = query.lower()
 
     if any(word in query for word in ["quality", "critic", "critique", "missing"]):
@@ -94,12 +86,6 @@ def choose_agents(query):
 
     if any(word in query for word in ["report", "executive", "summary", "recommendation"]):
         return ["report"]
-
-    if any(word in query for word in ["trend", "rising", "changed", "over time"]):
-        return ["trend"]
-
-    if any(word in query for word in ["memory", "history", "historical", "compare", "previous"]):
-        return ["memory"]
 
     if any(word in query for word in ["complaint", "topic", "theme", "issue", "pain point"]):
         return ["topic"]
@@ -111,6 +97,7 @@ def choose_agents(query):
 
 
 def expand_dependencies(selected_agents):
+    #it ensures all the required agent dependencies for selected agent are also included
     expanded = set()
 
     def add_agent(agent_name):
@@ -130,6 +117,7 @@ def expand_dependencies(selected_agents):
 
 
 def route_next_agent(state):
+    #Determine the next agent to run based on the current state, required agents, and completed agents
     required = state.get("required_agents", [])
     completed = state.get("completed_agents", [])
 
@@ -141,6 +129,7 @@ def route_next_agent(state):
 
 
 def supervisor_agent(state):
+    #supervising the workflow, selecting agents based on the query, and managing dependencies
     query = state.get("query") or "Generate a complete business report."
     update_progress(state, 5, "Supervisor is reading the request")
 
@@ -161,6 +150,7 @@ def supervisor_agent(state):
 
 
 def sentiment_agent(state):
+    #Perform sentiment analysis on the input file and store the results in the state
     update_progress(state, 15, "Running RoBERTa sentiment analysis")
 
     sentiment_file = state.get("sentiment_file")
@@ -179,6 +169,7 @@ def sentiment_agent(state):
 
 
 def topic_agent(state):
+    #Perform topic modeling on the negative reviews and store the results in the state
     update_progress(state, 40, "Running BERTopic complaint clustering")
 
     topic_file = state.get("topic_file")
@@ -201,6 +192,7 @@ def topic_agent(state):
         return mark_completed(state, "topic")
 
     df = pd.read_csv(topic_file)
+    # Store the top 10 topics with their labels and counts in the state
     state["topic_result"] = (
         df[["Business_Label", "Count"]]
         .head(10)
@@ -211,56 +203,15 @@ def topic_agent(state):
     return mark_completed(state, "topic")
 
 
-def memory_agent(state):
-    update_progress(state, 70, "Updating memory from this run")
-
-    try:
-        from memory.memory_manager import save_sentiment_history, save_topic_history
-
-        save_sentiment_history()
-        save_topic_history()
-
-        sentiment_df = pd.read_csv("memory/sentiment_history.csv")
-        topic_df = pd.read_csv("memory/topic_history.csv")
-
-        state["memory_result"] = {
-            "sentiment_records": len(sentiment_df),
-            "topic_records": len(topic_df),
-            "total_runs": len(topic_df["run_date"].unique())
-        }
-
-    except Exception as error:
-        state["memory_result"] = {"error": str(error)}
-
-    update_progress(state, 78, "Memory updated")
-    return mark_completed(state, "memory")
-
-
-def trend_agent(state):
-    update_progress(state, 82, "Detecting complaint trends")
-
-    try:
-        from tools.trend_detector import detect_trends
-
-        state["trend_result"] = detect_trends()
-
-    except Exception as error:
-        state["trend_result"] = {"error": str(error)}
-
-    update_progress(state, 88, "Trend detection completed")
-    return mark_completed(state, "trend")
-
-
 def report_agent(state):
+    #Generate an executive report based on the results of previous agents and store it in the state
     update_progress(state, 92, "Generating executive report")
 
     from analysis.gemini_report import generate_business_report
 
     report = generate_business_report(
         state.get("sentiment_result", {}),
-        state.get("topic_result", {}),
-        state.get("memory_result", {}),
-        state.get("trend_result", {})
+        state.get("topic_result", {})
     )
 
     state["report"] = report
@@ -275,6 +226,7 @@ def report_agent(state):
 
 
 def critic_agent(state):
+    #Evaluate the quality of the generated report and store the results in the state
     update_progress(state, 98, "Checking report quality")
 
     from analysis.gemini_critic import evaluate_report

@@ -7,13 +7,11 @@ from langgraph.graph import (
 from agent.agents import (
     FeedbackState,
     critic_agent,
-    memory_agent,
     report_agent,
     route_next_agent,
     sentiment_agent,
     supervisor_agent,
-    topic_agent,
-    trend_agent
+    topic_agent
 )
 
 builder = StateGraph(
@@ -40,16 +38,6 @@ builder.add_node(
 )
 
 builder.add_node(
-    "memory",
-    memory_agent
-)
-
-builder.add_node(
-    "trend",
-    trend_agent
-)
-
-builder.add_node(
     "report",
     report_agent
 )
@@ -69,33 +57,33 @@ builder.add_edge(
 )
 
 route_map = {
+    #Route based on the next agent to run(agent to node mapping)
     "sentiment": "sentiment",
     "topic": "topic",
-    "memory": "memory",
-    "trend": "trend",
     "report": "report",
     "critic": "critic",
     "end": END
 }
 
 for node_name in [
+    #List of all nodes in the graph
     "supervisor",
     "sentiment",
     "topic",
-    "memory",
-    "trend",
     "report",
     "critic"
 ]:
     builder.add_conditional_edges(
+        #Route based on the next agent to run(agent to node mapping)
         node_name,
-        route_next_agent,
+        route_next_agent, #dynamically connect using the route_next_agent function
         route_map
     )
 
 graph = builder.compile()
 
 if __name__ == "__main__":
+    #For testing
 
     query = input(
         "\nEnter Query: "

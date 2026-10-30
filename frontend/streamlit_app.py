@@ -1,7 +1,7 @@
-import shutil
+import shutil #Copies uploaded CSV to uploads folder.
 import sys
 import time
-from pathlib import Path
+from pathlib import Path #file handling
 
 import pandas as pd
 import streamlit as st
@@ -26,11 +26,11 @@ st.set_page_config(
     layout="wide"
 )
 
-
+#to stop reload of LangGraph on every run
 @st.cache_resource
 def load_agent_graph():
 
-    from agent.graph import graph
+    from agent.graph import graph  #Loads LangGraph
 
     return graph
 
@@ -54,12 +54,15 @@ def initialize_session():
 
 def reset_analysis_cache():
 
+    #Reset when new csv uploaded
     st.session_state.sentiment_file = None
     st.session_state.topic_file = None
     st.session_state.last_result = None
 
 
 def render_outputs(result):
+
+    #converts Ai outputs to dashboard components
 
     result = {
         key: value
@@ -87,8 +90,6 @@ def render_outputs(result):
 
     show_sentiment = "sentiment" in completed_agents
     show_topics = "topic" in completed_agents
-    show_trends = "trend" in completed_agents
-    show_memory = "memory" in completed_agents
 
     try:
 
@@ -222,34 +223,6 @@ def render_outputs(result):
 
         st.divider()
 
-    if show_memory and result.get(
-        "memory_result"
-    ):
-
-        st.header(
-            "Memory Result"
-        )
-
-        st.json(
-            result["memory_result"]
-        )
-
-        st.divider()
-
-    if show_trends and result.get(
-        "trend_result"
-    ):
-
-        st.header(
-            "Trend Result"
-        )
-
-        st.json(
-            result["trend_result"]
-        )
-
-        st.divider()
-
     if result.get(
         "report"
     ):
@@ -334,8 +307,7 @@ st.sidebar.markdown(
     1. Upload feedback CSV
     2. Ask multiple questions
     3. Supervisor routes agents
-    4. Agents reuse same file
-    5. Dashboard updates results
+    4. Dashboard displays current-file results
     """
 )
 
@@ -356,7 +328,7 @@ st.title(
 
 st.caption(
     """
-    Upload one feedback CSV, then ask multiple analysis questions on the same file.
+    Upload a feedback CSV and analyze only the currently selected file.
     """
 )
 
@@ -367,8 +339,6 @@ SUGGESTED_PROMPTS = [
     "Generate a complete business report and review its quality.",
     "What is the overall customer sentiment?",
     "Find the top customer complaint themes.",
-    "Detect rising complaint trends.",
-    "Compare this run with previous feedback runs.",
     "Create an executive summary with recommendations."
 ]
 
@@ -416,7 +386,7 @@ if st.session_state.active_file_path:
         f"""
         <div class="status-card">
             <strong>Active file:</strong> {st.session_state.active_file_name}
-            <div class="muted">This file will be reused for every question until you upload a different CSV.</div>
+            <div class="muted">Only this currently uploaded file will be used for the analysis.</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -443,7 +413,7 @@ if st.session_state.active_file_path:
     query = custom_query.strip() or selected_prompt
 
     st.caption(
-        "You can ask another question after the run without uploading the file again."
+        "Each result is based only on the active uploaded CSV."
     )
 
     if st.button(
@@ -567,5 +537,5 @@ if st.session_state.active_file_path:
 else:
 
     st.info(
-        "Upload a CSV file first. After that, you can ask multiple questions on the same file."
+        "Upload a CSV file to analyze its current feedback data."
     )

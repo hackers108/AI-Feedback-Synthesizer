@@ -14,11 +14,10 @@ An agentic customer feedback analysis app built with Python, Streamlit, LangGrap
 
 ## What It Does
 
-The app lets a user upload one customer feedback CSV and then ask multiple questions on the same file, such as:
+The app lets a user upload a customer feedback CSV and analyze only the currently selected file, such as:
 
 - What is the overall customer sentiment?
 - What are the top complaint themes?
-- What complaint trends are rising?
 - Generate an executive report with recommendations.
 
 ## Simple Architecture
@@ -34,8 +33,6 @@ agent/agents.py
         |
         +--> analysis/sentiment.py       RoBERTa sentiment analysis
         +--> analysis/topic_modeling.py  BERTopic complaint clustering
-        +--> memory/memory_manager.py    CSV-based run history
-        +--> tools/trend_detector.py     Trend comparison
         +--> analysis/gemini_report.py   Gemini business report
         +--> analysis/gemini_critic.py   Report quality check
 ```
@@ -47,8 +44,6 @@ CSV Upload
  -> Schema normalization
  -> Sentiment Agent
  -> Topic Agent
- -> Memory Agent
- -> Trend Agent
  -> Report Agent
  -> Critic Agent
  -> Streamlit Results
@@ -63,8 +58,6 @@ The supervisor does not always run every agent. It reads the user question, choo
 - `agent/agents.py`: Supervisor, routing, and all agent node functions.
 - `analysis/sentiment.py`: RoBERTa sentiment classification.
 - `analysis/topic_modeling.py`: BERTopic clustering on negative reviews.
-- `memory/memory_manager.py`: Saves previous runs.
-- `tools/trend_detector.py`: Compares topic counts across runs.
 - `analysis/gemini_report.py`: Generates business report.
 - `analysis/gemini_critic.py`: Checks report quality.
 
@@ -73,7 +66,7 @@ The supervisor does not always run every agent. It reads the user question, choo
 ```powershell
 cd C:\Users\arpit\feedback-synthesizer
 venv\Scripts\activate
-streamlit run frontend\streamlit_app.py
+streamlit run app.py
 ```
 
 ## Environment
@@ -88,4 +81,4 @@ If Gemini fails, report generation uses the local fallback in `analysis/local_re
 
 ## Interview Pitch
 
-"I built an agentic AI feedback analysis platform. Users upload a CSV of customer reviews and ask natural-language questions. A LangGraph supervisor decides which agents are needed. The Sentiment Agent uses RoBERTa, the Topic Agent uses BERTopic, the Memory Agent stores historical runs, the Trend Agent compares changes over time, and Gemini generates an executive report. The system is modular, so each agent has one responsibility."
+"I built an agentic AI feedback analysis platform. Users upload a CSV of customer reviews and ask natural-language questions. A LangGraph supervisor decides which agents are needed. The Sentiment Agent uses RoBERTa, the Topic Agent uses BERTopic, Gemini generates an executive report from the current upload, and the Critic Agent checks report quality. The system is modular, so each agent has one responsibility."

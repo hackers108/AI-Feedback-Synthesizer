@@ -35,11 +35,7 @@ def generate_business_report(
 
     sentiment_summary,
 
-    topic_summary,
-
-    memory_summary,
-
-    trend_summary
+    topic_summary
 
 ):
 
@@ -56,12 +52,6 @@ Sentiment Summary:
 Topic Summary:
 {topic_summary}
 
-Memory Summary:
-{memory_summary}
-
-Trend Summary:
-{trend_summary}
-
 Generate:
 
 1. Executive Summary
@@ -70,11 +60,11 @@ Generate:
 
 3. Key Customer Complaints
 
-4. Trend Analysis
-
-5. Business Recommendations
+4. Business Recommendations
 
 Keep the report concise and business friendly.
+Use only the supplied current-upload data. Do not discuss historical trends,
+previous runs, changes over time, or future trend monitoring.
 """
 
     try:
@@ -100,10 +90,5 @@ Keep the report concise and business friendly.
         return generate_local_report(
 
             sentiment_summary,
-
-            topic_summary,
-
-            memory_summary,
-
-            trend_summary
+            topic_summary
         )

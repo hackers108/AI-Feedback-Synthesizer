@@ -33,7 +33,6 @@ def evaluate_report_locally(report):
     required_sections = {
         "sentiment": "Missing sentiment analysis",
         "complaint": "Missing customer complaints",
-        "trend": "Missing trend analysis",
         "recommend": "Missing recommendations"
     }
 
@@ -62,8 +61,7 @@ Evaluate:
 
 1. Is sentiment analysis present?
 2. Are customer complaints discussed?
-3. Is trend analysis present?
-4. Are recommendations provided?
+3. Are recommendations provided?
 
 Return ONLY valid JSON.
 
@@ -79,7 +77,6 @@ OR
 {{
     "status": "FAIL",
     "issues": [
-        "Missing trend analysis",
         "Missing recommendations"
     ]
 }}

@@ -2,7 +2,7 @@
 
 ## 1. One-Minute Explanation
 
-This project analyzes customer feedback at scale. A user uploads a CSV of reviews, then asks questions like "What are customers complaining about?" or "Generate a business report." The LangGraph supervisor routes the task to the correct agents. The system performs sentiment analysis with RoBERTa, complaint clustering with BERTopic, memory tracking with CSV history, trend detection, and Gemini-based executive reporting.
+This project analyzes customer feedback at scale. A user uploads a CSV of reviews, then asks questions like "What are customers complaining about?" or "Generate a business report." The LangGraph supervisor routes the task to the correct agents. The system performs sentiment analysis with RoBERTa, complaint clustering with BERTopic, and Gemini-based executive reporting using only the currently uploaded data.
 
 ## 2. Why It Is Agentic
 
@@ -13,8 +13,6 @@ Agents:
 - Supervisor Agent: understands the user query and selects required agents.
 - Sentiment Agent: classifies reviews as positive, neutral, or negative.
 - Topic Agent: clusters negative reviews into complaint themes.
-- Memory Agent: stores and reads previous analysis runs.
-- Trend Agent: compares current topics with previous runs.
 - Report Agent: generates a business report.
 - Critic Agent: checks whether the report has required sections.
 
@@ -25,8 +23,6 @@ frontend/streamlit_app.py  User interface
 agent/graph.py            LangGraph connections
 agent/agents.py           All agent logic
 analysis/                 ML and LLM analysis code
-memory/                   Historical run data
-tools/                    Trend detection helper
 normalization/            Schema normalization
 utils/                    CSV loading helper
 data/                     Sample data and outputs
@@ -46,11 +42,8 @@ I cluster negative reviews because the business value is finding what customers 
 LangGraph:
 I used LangGraph because it makes the workflow explicit as nodes and edges. This is easier to extend than one long script.
 
-Memory:
-I store results with timestamps so the system can compare current and previous runs.
-
 Gemini:
-Structured analytics are generated first, then Gemini converts them into a business-readable report.
+Structured analytics from the current upload are generated first, then Gemini converts them into a business-readable report.
 
 ## 5. Common Interview Questions
 
@@ -76,7 +69,5 @@ Use these in the UI:
 ```text
 What is the overall customer sentiment?
 Find the top customer complaint themes.
-Detect rising complaint trends.
-Compare this run with previous feedback runs.
 Generate a complete business report and review its quality.
 ```
